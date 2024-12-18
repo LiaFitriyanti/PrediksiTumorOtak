@@ -37,10 +37,10 @@ if uploaded_file is not None:
 
     # Melakukan prediksi
     prediction = model.predict(processed_image)
-    predicted_class = np.argmax(prediction, axis=1)
+    predicted = np.argmax(prediction, axis=1)
 
     # Menampilkan hasil prediksi
-    if predicted_class[0] == 0:
-        st.write("Prediksi: No (Tidak ada tumor)")
+    if(predicted[0] == 0):
+        predicted = 'Prediksi: No (Tidak ada tumor)'
     else:
-        st.write("Prediksi: Yes (Ada tumor)")
+        predicted = 'Prediksi: Yes (Ada tumor)'

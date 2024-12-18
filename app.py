@@ -11,35 +11,34 @@ import streamlit as st
 import numpy as np
 from tensorflow.keras.models import load_model
 
-# Memuat model yang telah dilatih
-model = load_model('tumor_otak.h5')  # Ganti dengan path model Anda
 
-# Fungsi untuk memproses gambar
+model = load_model('tumor_otak.h5')  
+
+
 def preprocess_image(image):
-    image = cv2.resize(image, (224, 224))  # Ubah ukuran sesuai dengan input model
-    image = image / 255.0  # Normalisasi
-    return np.expand_dims(image, axis=0)  # Tambahkan dimensi batch
+    image = cv2.resize(image, (224, 224))  
+    image = image / 255.0  
+    return np.expand_dims(image, axis=0)  
 
-# Judul aplikasi
 st.title("Prediksi Tumor dari Gambar")
 
-# Mengunggah gambar
+
 uploaded_file = st.file_uploader("Unggah gambar tumor", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Membaca dan menampilkan gambar
+  
     image = cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), cv2.IMREAD_COLOR)
     st.image(image, caption="Gambar yang diunggah", use_column_width=True)
 
-    # Memproses gambar
+   
     processed_image = preprocess_image(image)
 
-    # Melakukan prediksi
+    
     prediction = model.predict(processed_image)
-    predicted = np.argmax(prediction, axis=1)
+    predicted_class = np.argmax(prediction, axis=1)
 
     # Menampilkan hasil prediksi
     if(predicted[0] == 0):
-        predicted = 'Prediksi: No (Tidak ada tumor)'
+        predicted_class = 'Prediksi: No (Tidak ada tumor)'
     else:
-        predicted = 'Prediksi: Yes (Ada tumor)'
+        predicted_class = 'Prediksi: Yes (Ada tumor)'
